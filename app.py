@@ -22,6 +22,7 @@ from dash.dependencies import Input, Output, State
 # import pandas as pd
 # import sqlite3
 import datetime
+import time
 # import os
 # import urllib.parse
 
@@ -176,39 +177,135 @@ def render_page_content(pathname):
                 [
                     dbc.Col(
                         [
-                        html.P('Select member'),
-                        dcc.Dropdown(
-                            id='dropdown_sec_member',
-                            options=[{'label': i, 'value': i} for i in member_list],
-                            # options=[{'label': i[0], 'value': i[1]} for i in member_tuples], # See above
-                            value='Albania',
-                            clearable=False
-                        ),
-                        ], width=2
+                            html.Div(
+                                [
+                                    html.P('Select indicator (* Required)'),
+                                    dcc.Dropdown(
+                                        id='dropdown_sec_member',
+                                        multi=True,
+                                        options=[{'label': i, 'value': i} for i in member_list],
+                                        # options=[{'label': i[0], 'value': i[1]} for i in member_tuples], # See above
+                                        value='Albania',
+                                        clearable=False
+                                    ),
+                                ]
+                            )
+                        ], width=6
                     ),
-                    dbc.Col([
-                        html.P('Select topic'),
-                        dcc.Dropdown(
-                            id='dropdown_sec_topic',
-                            # options=[{'label': i, 'value': i} for i in ['Select','China', 'Argentina', 'Belgium']],
-                            options=[{'label': i, 'value': i} for i in cat_list],
-                            # multi=True,
-                            # value='0. summary',
-                            value='1. economic environment',
-                            clearable=False
-                        ),
-                        ], width=4, align="center"
-                    ),
+                    html.Br(),
+                ]
+            ),
+
+            html.Br(),
+
+            dbc.Row(
+                [
                     dbc.Col(
                         [
-                        html.P('Search by keywords ...'),
-                        dbc.Input(id="input-sec-search", placeholder="Type something...", type="text", value=''),
-                        # html.Span('  ', id="example-output", style={"vertical-align": "middle"}),
-                        dbc.Button('Search', id="button-sec-search", className="mr-2", color="info",),
-                        # html.Br(),
-                        # html.P(id="output"),
+                            html.P('Select reporter'),
+                            dcc.Dropdown(
+                                id='dropdown_sec_member',
+                                multi=True,
+                                options=[{'label': i, 'value': i} for i in member_list],
+                                # options=[{'label': i[0], 'value': i[1]} for i in member_tuples], # See above
+                                value='Albania',
+                                clearable=False
+                            ),
+                        ], width=3
+                    ),
+                    dbc.Col([
+                            html.P('Select partner'),
+                            dcc.Dropdown(
+                                id='dropdown_sec_topic',
+                                # options=[{'label': i, 'value': i} for i in ['Select','China', 'Argentina', 'Belgium']],
+                                options=[{'label': i, 'value': i} for i in cat_list],
+                                # multi=True,
+                                # value='0. summary',
+                                value='1. economic environment',
+                                clearable=False
+                            ),
+                        ], width=3, align="center"
+                    ),
+                ]
+            ),
 
-                        ], width=6
+            dbc.Row(
+                [
+                    dbc.Col(
+                        [
+                            html.P('Select HS'),
+                            dcc.Dropdown(
+                                id='dropdown_sec_member',
+                                multi=True,
+                                options=[{'label': i, 'value': i} for i in member_list],
+                                # options=[{'label': i[0], 'value': i[1]} for i in member_tuples], # See above
+                                value='Albania',
+                                clearable=False
+                            ),
+                        ], width=3
+                    ),
+                    dbc.Col([
+                            html.P('Select tariff regime'),
+                            dcc.Dropdown(
+                                id='dropdown_sec_topic',
+                                # options=[{'label': i, 'value': i} for i in ['Select','China', 'Argentina', 'Belgium']],
+                                options=[{'label': i, 'value': i} for i in cat_list],
+                                # multi=True,
+                                # value='0. summary',
+                                value='1. economic environment',
+                                clearable=False
+                            ),
+                        ], width=3, align="center"
+                    ),
+                ]
+            ),
+
+            html.Br(),
+
+            dbc.Row(
+                [
+                    dbc.Col(
+                        [
+                            html.Div(
+                                [
+                                    html.P('API URL String'),
+                                    dbc.Alert("This is a secondary alert", color="#c7eae4"),
+                                ]
+                            )
+                        ], width=6,
+                    )
+                ]
+            ),
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            dbc.Row(
+                [
+
+                    dbc.Col(
+                        # [
+                        # html.P('Search by keywords ...'),
+                        # dbc.Input(id="input-sec-search", placeholder="Type something...", type="text", value=''),
+                        # # html.Span('  ', id="example-output", style={"vertical-align": "middle"}),
+                        # dbc.Button('Search', id="button-sec-search", className="mr-2", color="info",),
+                        # # html.Br(),
+                        # # html.P(id="output"),
+
+                        # ], width=6
                     ),
                 ],
             ),
@@ -218,18 +315,15 @@ def render_page_content(pathname):
                 [
                     dbc.Col(
                         [
-                        html.P('Search by keywords ...'),
-                        dbc.Input(id="search-input", placeholder="Type something...", type="text", value=''),
-                        # html.Span('  ', id="example-output", style={"vertical-align": "middle"}),
-                        dbc.Button('Search', id="button-sec-search", className="mr-2", color="info",),
-                        # html.Br(),
-                        # html.P(id="output"),
-                    
-                        ], width=6
+                            dbc.Button("Show sample data", id="loading-button", n_clicks=0, color="info",),
+                            dbc.Spinner(html.Div(id="loading-output")),
+
+                        ], width=3,
+                        
                     ),
                     dbc.Col(
                         [
-                        html.P('Export results to Excel ...'),
+                        # html.P('Export results to Excel ...'),
                         # dbc.Button("Download", id="download-link", className="mr-3"),
                         html.Span(id="example-output", style={"vertical-align": "middle"}),
                         html.A(
@@ -238,9 +332,9 @@ def render_page_content(pathname):
                             download="data-report-sec-"+ datetime.datetime.now().strftime("%Y%m%d-%H%M%S") + ".csv",
                             href="",
                             target="_blank",
-                            children = [dbc.Button("Download", id="download-link2", className="mr-4", color="info",)]
+                            children = [dbc.Button("Download CSV", id="download-link2", className="mr-4", color="info",)]
                         )
-                        ], width=6
+                        ], width=3
                     ),
                 ],
             ),
@@ -340,6 +434,54 @@ def render_page_content(pathname):
             html.P(f"The pathname {pathname} was not recognised..."),
         ]
     )
+
+
+
+
+
+
+
+
+
+
+# show sample data
+@app.callback(
+    Output("loading-output", "children"), [Input("loading-button", "n_clicks")]
+)
+def load_output(n):
+    if n:
+        time.sleep(5)
+        return f"Output loaded {n} times"
+    # return "Output not reloaded yet"
+    return ""
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # Page 1 dropdown control
 @app.callback(
